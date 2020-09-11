@@ -1,0 +1,29 @@
+html
+    head
+        title #{title}
+        style.
+          table {
+              font-family: arial, sans-serif;
+              border-collapse: collapse;
+              width: 100%;
+          }
+          td, th {
+              border: 1px solid #dddddd;
+              text-align: left;
+              padding: 8px;
+          }
+          tr:nth-child(even) {
+              background-color: #dddddd;
+          }
+    body
+      each n in metadata
+      table
+        tr
+            th No.
+            th Title
+            th Rating
+        each val, index in metadata
+            tr
+                td #{index + 1}
+                td img(src=myAttributes)
+                td #{metadata[index].blogTitle}
