@@ -2,10 +2,10 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
 
 var userSchema = mongoose.Schema({
-    username : { type: String, required: [true, 'Username is required!'], unique: true},
+    username: { type: String, required: [true, 'Username is required!'], match: [/^.{4,12}$/, 'Should be 4-12 characters!'], trim:true, unique: true},
     password: { type: String, required: [true, 'Username is required!'], select:false},
-    name: { type: String, required: [true, 'Name is required!']},
-    email : {type:String}    
+    name: { type: String, required: [true, 'Name is required!'], match: [/^.{4,12}$/, 'Should be 4-12 characters!'], trim:true},
+    email: { type: String, match: [/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Should be a vaild email address!'],trim:true}    
 }, {
     toObject : {virtuals:true}
 });
@@ -26,6 +26,8 @@ userSchema.virtual('newPassword')
     .get(function(){return this._newPassword})
     .set(function (value) { this._newPassword = value});
 
+var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/;
+var passwordRegexErrorMessage = 'Should be minimum 8 characters of alphabet and number combination!';
 userSchema.path('password').validate(function(v){
     var user = this;
 
@@ -33,7 +35,10 @@ userSchema.path('password').validate(function(v){
         if (!user.passwordConfirmation) {
             user.invalidate('paswordConfirmation', 'Password Confirmation is required.');
         }
-        if (user.password !== user.passwordConfirmation) {
+        if (!passwordRegex.test(user.password)) {
+            user.invalidate('password', passwordRegexErrorMessage);
+        }
+        else if (user.password !== user.passwordConfirmation) {
             user.invalidate('passwordConfirmation', 'Password Confirmation does not matched!');
         }        
     }
@@ -44,7 +49,11 @@ userSchema.path('password').validate(function(v){
         } else if (!bcrypt.compareSync(user.currentPassword, user._originalPassword)) {
             user.invalidate('currentPassword', 'Current Password is invalid!');
         }
-        if (user._newPassword !== user.passwordConfirmation) {
+
+        if (user._newPassword && !passwordRegex.test(user.newPassword)) {
+            user.invalidate("newPassword", passwordRegexErrorMessage);
+        }
+        else if (user.newPassword !== user.passwordConfirmation) {
             user.invalidate('passwordConfrimation', 'Password Confirmation does not matched!');
         }
     }
