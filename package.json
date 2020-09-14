@@ -12,11 +12,19 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+<<<<<<< HEAD
     "connect-flash": "^0.1.1",
+=======
+    "cheerio": "^1.0.0-rc.3",
+>>>>>>> 37d9bd7fa3d2b272fb8eb1763042a9f7c2c67ef1
     "ejs": "^3.1.5",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "method-override": "^3.0.0",
-    "mongoose": "^5.10.3"
+    "mongoose": "^5.10.4",
+    "nodemon": "^2.0.4",
+    "path": "^0.12.7",
+    "pug": "^3.0.0",
+    "request": "^2.88.2"
   }
 }
